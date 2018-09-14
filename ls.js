@@ -6,7 +6,8 @@ var path = require('path');
 
   fs.readdir(filePath, (err, list) => {
 
-  list.forEach((e, index)=>{
+  list.forEach
+  ((e, index)=>{
     let ext = path.extname(e);
     if (ext.substring(1) === process.argv[3]) {
       console.log(e);
