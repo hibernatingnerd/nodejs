@@ -1,21 +1,38 @@
-var net = require('net')
+// require filesystem
+var fs = require('fs')
 
-// ensure two-digit format for all number. 01 02 instead of 1 2 etc.
-function zeroFill (i) {
-  return (i < 10 ? '0' : '') + i
-}
+// A typical Node HTTP server looks like this:
+  // require http
+  var http = require('http')
+// same as net.createServer but for http requests (get, post, patch, put)
+   var server = http.createServer(function (req, res) {
+     // request handling logic...
+     // get the data from progress.argv
+     var data = fs.createReadStream(process.argv[3])
+    // retrieve object value under key "path"
+     var path = data.path
+     // Get buffer from path location
+     var fileBuffer = fs.readFileSync(path)
+     // convert to string (or declare utf8 as an option in readFileSync)
+     var fileStr =  fileBuffer.toString()
 
-function now () {
-  var d = new Date()
-  return d.getFullYear() + '-' +
-    zeroFill(d.getMonth() + 1) + '-' +
-    zeroFill(d.getDate()) + ' ' +
-    zeroFill(d.getHours()) + ':' +
-    zeroFill(d.getMinutes())
-}
+     // write the head response
+     res.writeHead(200, {'Content-Type': 'text/plain'});
+     // now pass whatever you wish to send.
+    res.end(fileStr);
 
-var server = net.createServer(function (socket) {
-  socket.end(now() + '\n')
+
+
+   }).listen(Number(process.argv[2]))
+
+// clean answer
+var http = require('http')
+var fs = require('fs')
+
+var server = http.createServer(function (req, res) {
+  res.writeHead(200, { 'content-type': 'text/plain' })
+
+  fs.createReadStream(process.argv[3]).pipe(res)
 })
 
 server.listen(Number(process.argv[2]))
